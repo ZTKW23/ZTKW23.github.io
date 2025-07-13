@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCQ Quiz</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link href="style.css" rel="stylesheet">
+</head>
+<body><div id="quiz-container">
+<div id="progress-bar">
+<div id="progress"></div>
+</div>
+<div id="quiz">
+<p id="question-number">Question 1/10</p>
+<p class="question"></p>
+<img id="question-image" src="" alt="Question image" style="max-width: 100%; height: 200px; display: none;">
+<div class="options"></div>
+<div id="comment"></div>
+</div>
+<div id="score" style="display: none;"></div>
+</div>
+<p><script>
+    const questions = [
+      { 
+        question: "Which of these listings are safer?", 
+        image: "images/Listings 1.png",
+        options: ["A", "B"], 
+        answer: 0, 
+        comment: "Scammers can use stock photos to hide that they do not have an actual item."
+      },
+      { 
+        question: "Which of these listings are safer?", 
+        image: "images/Listings 2.png",
+        options: ["A", "B"], 
+        answer: 1, 
+        comment: "Scammers may try to lure in potential victims with unusually low prices."
+      },
+
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+  const question = questions[currentQuestion];
+  $("#question-number").text(`Question ${currentQuestion + 1}/${questions.length}`);
+  $(".question").text(question.question);
+  
+  if (question.image) {
+    $("#question-image").attr("src", question.image).show();
+  } else {
+    $("#question-image").hide();
+  }
+
+  $(".options").empty();
+  question.options.forEach((option, index) => {
+    $(".options").append(`<button data-index="${index}">${option}</button>`);
+  });
+  $("#comment").text("");
+}
+
+    function updateProgressBar() {
+      const progress = ((currentQuestion + 1) / questions.length) * 100;
+      $("#progress").css("width", `${progress}%`);
+    }
+
+    $(document).ready(function () {
+      loadQuestion();
+      updateProgressBar();
+
+      $(".options").on("click", "button", function () {
+        const selected = $(this).data("index");
+        const question = questions[currentQuestion];
+
+        if (selected === question.answer) {
+          $(this).addClass("correct");
+          score++;
+        } else {
+          $(this).addClass("incorrect");
+          $(`.options button[data-index='${question.answer}']`).addClass("correct");
+        }
+
+        $("#comment").text(question.comment);
+
+        setTimeout(() => {
+          currentQuestion++;
+          if (currentQuestion < questions.length) {
+            loadQuestion();
+            updateProgressBar();
+          } else {
+            $("#quiz").hide();
+            $("#score").show().text(`You scored ${score} out of ${questions.length}!`);
+          
+  setTimeout(() => {
+    window.location.href = "138.html";
+  }, 3000);
+          }
+        }, 2000);
+      });
+    });
+  </script></p></body></html>
